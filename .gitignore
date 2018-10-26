@@ -24,3 +24,8 @@ hs_err_pid*
 
 # VSCode
 .vscode
+
+maven-archetype-quickstart/target
+maven-archetype-quickstart/.classpath
+maven-archetype-quickstart/.settings
+maven-archetype-quickstart/.project
