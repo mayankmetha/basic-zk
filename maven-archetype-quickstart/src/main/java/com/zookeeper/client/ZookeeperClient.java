@@ -49,7 +49,18 @@ public class ZookeeperClient {
             return this.zooKeeper.create(nodeName, nodeData.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE,
                     CreateMode.EPHEMERAL_SEQUENTIAL);
         } catch (KeeperException | InterruptedException e) {
-            System.err.println("Failed to create persistent node " + nodeName + ": " + e.getMessage());
+            System.err.println("Failed to create sequential node " + nodeName + ": " + e.getMessage());
+        }
+
+        return null;
+    }
+
+    public String createEphemeralNode(String nodeName, String nodeData) {
+        try {
+            return this.zooKeeper.create(nodeName, nodeData.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE,
+                    CreateMode.EPHEMERAL);
+        } catch (KeeperException | InterruptedException e) {
+            System.err.println("Failed to create ephemeral node " + nodeName + ": " + e.getMessage());
         }
 
         return null;
@@ -104,6 +115,28 @@ public class ZookeeperClient {
 
     public boolean isOpen() {
         return (this.zooKeeper.getState().compareTo(States.CONNECTED) == 0);
+    }
+
+
+
+    public void lock(String lockNode) {
+        while (true) {
+            if(null == createEphemeralNode(lockNode, Long.toString(ProcessHandle.current().pid()))) {
+                try {
+                Thread.sleep(100);
+                } catch(InterruptedException e) {
+                    System.out.println("Interrupted while locking!");
+                    return;
+                }
+            } else {
+                System.out.println("Acquired lock");
+                return;
+            }
+        }
+    }
+
+    public void unlock(String lockNode) {
+        deleteNode(lockNode);
     }
 
     private ZooKeeper zooKeeper;

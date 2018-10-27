@@ -9,8 +9,12 @@ import org.apache.zookeeper.Watcher;
 
 public class ClusterNode {
     public static void main(String[] args) throws Exception {
+        if(args.length != 1) {
+            System.err.println("Usage: <exe> <zookeeper servers>");
+            return;
+        }
 
-        zk = new ZookeeperClient("localhost:2181", null);
+        zk = new ZookeeperClient(args[0], null);
 
         if (!zk.nodeExists(parentNode)) {
             String createdNode = zk.createPersistentNode(parentNode, Long.toString(ProcessHandle.current().pid()));
