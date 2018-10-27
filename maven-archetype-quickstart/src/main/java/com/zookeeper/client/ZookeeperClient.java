@@ -1,12 +1,15 @@
 package com.zookeeper.client;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.ZooKeeper;
+import org.apache.zookeeper.ZooKeeper.States;
 
 public class ZookeeperClient {
 
@@ -60,12 +63,47 @@ public class ZookeeperClient {
         }
     }
 
+    public List<String> getChildren(String nodeName) {
+        List<String> children = new ArrayList<>();
+        try {
+            children = this.zooKeeper.getChildren(nodeName, null);
+            System.out.println("Found " + children + " children for node " + nodeName);
+        } catch (KeeperException | InterruptedException e) {
+            System.err.println("Failed to get children of node " + nodeName + ": " + e.getMessage());
+        }
+
+        return children;
+    }
+
+    public String getData(String nodeName) {
+        try {
+            return new String(this.zooKeeper.getData(nodeName, false, null));
+        } catch (KeeperException | InterruptedException e) {
+            System.err.println("Failed to get node " + nodeName + ": " + e.getMessage());
+        }
+
+        return null;
+    }
+
+    public void watchChildren(String nodeName, Watcher watcher) {
+        try {
+            this.zooKeeper.getChildren(nodeName, watcher, null);
+            System.out.println("Successfully set watch");
+        } catch (KeeperException | InterruptedException e) {
+            System.err.println("Failed to set watch on node " + nodeName + ": " + e.getMessage());
+        }
+    }
+
     public void close() {
         try {
             this.zooKeeper.close();
         } catch (InterruptedException e) {
             System.err.println("Failed to close handle: " + e.getMessage());
         }
+    }
+
+    public boolean isOpen() {
+        return (this.zooKeeper.getState().compareTo(States.CONNECTED) == 0);
     }
 
     private ZooKeeper zooKeeper;
