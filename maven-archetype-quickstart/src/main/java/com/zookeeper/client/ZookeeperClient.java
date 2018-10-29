@@ -78,7 +78,7 @@ public class ZookeeperClient {
         List<String> children = new ArrayList<>();
         try {
             children = this.zooKeeper.getChildren(nodeName, null);
-            System.out.println("Found " + children + " children for node " + nodeName);
+            //System.out.println("Found " + children + " children for node " + nodeName);
         } catch (KeeperException | InterruptedException e) {
             System.err.println("Failed to get children of node " + nodeName + ": " + e.getMessage());
         }
@@ -99,7 +99,7 @@ public class ZookeeperClient {
     public void watchChildren(String nodeName, Watcher watcher) {
         try {
             this.zooKeeper.getChildren(nodeName, watcher, null);
-            System.out.println("Successfully set watch");
+            //System.out.println("Successfully set watch");
         } catch (KeeperException | InterruptedException e) {
             System.err.println("Failed to set watch on node " + nodeName + ": " + e.getMessage());
         }
@@ -117,8 +117,6 @@ public class ZookeeperClient {
         return (this.zooKeeper.getState().compareTo(States.CONNECTED) == 0);
     }
 
-
-
     public void lock(String lockNode) {
         while (true) {
             if(null == createEphemeralNode(lockNode, Long.toString(ProcessHandle.current().pid()))) {
@@ -129,7 +127,7 @@ public class ZookeeperClient {
                     return;
                 }
             } else {
-                System.out.println("Acquired lock");
+                //System.out.println("Acquired lock");
                 return;
             }
         }
@@ -137,6 +135,7 @@ public class ZookeeperClient {
 
     public void unlock(String lockNode) {
         deleteNode(lockNode);
+        //System.out.println("Released lock");
     }
 
     private ZooKeeper zooKeeper;
