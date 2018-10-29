@@ -1,5 +1,7 @@
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.zookeeper.WatchedEvent;
+import org.apache.zookeeper.Watcher;
 
 import java.io.IOException;
 import java.util.Comparator;
@@ -8,17 +10,17 @@ import java.util.List;
 public class app {
 
     private static String myID;
+    private static zNode con;
 
     private static void createRoot() {
         String path = "/BasicZNodeRoot";
         String host = "localhost";
         byte[] data = "basic-zk:".getBytes();
         try {
-            zNode con = new zNode(host,null);
+            con = new zNode(host,null);
             if(!con.isExisting(path)) {
                 myID = con.createPersistant(path,data);
             }
-            con.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -30,7 +32,7 @@ public class app {
         String host = "localhost";
         byte[] data = "basic-zk:".getBytes();
         try {
-            zNode con = new zNode(host,null);
+            con = new zNode(host,null);
             if(con.isExisting(path)) {
                 System.out.println(path+" exist");
             } else {
@@ -39,13 +41,15 @@ public class app {
                 String id[] = myID.split("/");
                 myID = id[id.length -1];
                 getChildren();
-                try {
-                    Thread.sleep(10000);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                con.watchNode("/BasicZNodeRoot",new Monitor());
+                while(true) {
+                    try {
+                        Thread.sleep(10000);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-            con.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -82,5 +86,13 @@ public class app {
         // turn off log4j used by ZooKeeper
         Logger.getRootLogger().setLevel(Level.OFF);
         createRoot();
+    }
+
+    static class Monitor implements Watcher {
+        @Override
+        public void process(WatchedEvent we) {
+            System.out.println("Watcher called");
+            con.watchNode("/BasicZNodeRoot",new Monitor());
+        }
     }
 }

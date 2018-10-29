@@ -57,6 +57,14 @@ class zNode {
         }
     }
 
+    void watchNode(String path, Watcher watcher) {
+        try {
+            this.zoo.getChildren(path,watcher);
+        } catch(KeeperException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     List<String> getChildren(String path) {
         List<String> children = new ArrayList<>();
         try {
