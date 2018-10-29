@@ -31,20 +31,22 @@ class zNode {
         return true;
     }
 
-    void createPersistant(String path, byte[] data) {
+    String createPersistant(String path, byte[] data) {
         try {
-            this.zoo.create(path, data, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+            return this.zoo.create(path, data, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
         } catch (KeeperException | InterruptedException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
-    void createEphemeral(String path, byte[] data) {
+    String createEphemeralSeq(String path, byte[] data) {
         try {
-            this.zoo.create(path, data, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+            return this.zoo.create(path, data, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
         } catch (KeeperException | InterruptedException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     void deleteNode(String path) {
