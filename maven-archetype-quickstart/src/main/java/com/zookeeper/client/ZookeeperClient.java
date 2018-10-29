@@ -138,5 +138,15 @@ public class ZookeeperClient {
         //System.out.println("Released lock");
     }
 
+    public int setData(String nodeName, String data) {
+        try {
+            this.zooKeeper.setData(nodeName, data.getBytes(), -1);
+            return 0;
+        } catch (KeeperException | InterruptedException e) {
+            System.err.println("Failed to set data on node " + nodeName + ": " + e.getMessage());
+        }
+        return -1;
+    }
+
     private ZooKeeper zooKeeper;
 }

@@ -22,6 +22,7 @@ public class ClusterNode {
             }
         } catch (NumberFormatException e) {
             System.err.println("Invalid number specified: " + args[1]);
+            System.exit(1);
         }
 
         ClusterNode.args = args;
