@@ -43,11 +43,9 @@ public class ClusterNode {
         identify();
 
         if (isMaster) {
-            zk.lock(nodeLock);
             for (int i = 1; i < numProcesses; ++i) {
                 startChild();
             }
-            zk.unlock(nodeLock);
         }
 
         // Sleep for a few seconds to allow for node creation
@@ -123,7 +121,6 @@ public class ClusterNode {
             if (!shutdownCalled) {
                 identify();
                 if (isMaster) {
-                    zk.lock(nodeLock);
                     // Start n -1 processes
                     List<String> children = zk.getChildren(parentNode);
                     int numRunning = 0;
@@ -138,7 +135,6 @@ public class ClusterNode {
                     for (int i = numRunning; i < numProcesses; ++i) {
                         startChild();
                     }
-                    zk.unlock(nodeLock);
                 }
             }
             zk.watchChildren(parentNode, this);
@@ -148,7 +144,6 @@ public class ClusterNode {
     final static String parentNode = "/zookeeper_demo";
     final static String nodePrefix = "cluster_";
     final static String nodeName = parentNode + "/" + nodePrefix;
-    final static String nodeLock = parentNode + "/" + "lock";
     private static boolean isMaster = false;
     private static int numProcesses = 0;
     private static String[] args = new String[0];
