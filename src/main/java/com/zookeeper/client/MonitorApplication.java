@@ -8,6 +8,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 
@@ -18,6 +21,9 @@ public class MonitorApplication {
             System.err.println("Usage: <exe> <zookeeper servers> <application name> <start script>");
             return;
         }
+
+        // turn off log4j used by ZooKeeper
+        Logger.getRootLogger().setLevel(Level.OFF);
 
         applicationName = args[1];
         starterScript = args[2];

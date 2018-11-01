@@ -5,13 +5,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.apache.maven.archetypes</groupId>
-  <artifactId>maven-archetype-quickstart</artifactId>
+  <artifactId>basic-zk</artifactId>
   <version>1.0</version>
   <packaging>jar</packaging>
 
-  <name>maven-archetype-quickstart</name>
-  <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
+  <name>basic-zk</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -51,7 +49,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.20.1</version>
+          <version>2.21.0</version>
         </plugin>
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>

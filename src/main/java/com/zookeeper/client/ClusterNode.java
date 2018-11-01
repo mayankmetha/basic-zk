@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 
@@ -14,6 +17,9 @@ public class ClusterNode {
             System.err.println("Usage: <exe> <zookeeper servers> <number of nodes>");
             return;
         }
+
+        // turn off log4j used by ZooKeeper
+        Logger.getRootLogger().setLevel(Level.OFF);
 
         try {
             numProcesses = Integer.parseInt(args[1]);
